@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../app/app_colors.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/core/constants/app_colors.dart';
 
 class RememberForgotRow extends StatelessWidget {
   final bool isRemember;

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-
-import '../../app/app_colors.dart';
-import '../../widgets/auth_text_field.dart';
-import '../../widgets/google_login_button.dart';
-import '../../widgets/primary_button.dart';
-import '../../widgets/remember_forgot_row.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/controller/auth_controller.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/core/constants/app_colors.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/features/widgets/auth_text_field.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/features/widgets/google_login_button.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/features/widgets/primary_button.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/features/widgets/remember_forgot_row.dart';
+import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -16,9 +17,65 @@ class SignupScreen extends StatefulWidget {
 class _LoginScreenState extends State<SignupScreen> {
   bool isRemember = false;
   bool isPasswordHidden = true;
+  final fullNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _registerWithEmail(AuthController controller) async {
+    final fullName = fullNameController.text.trim();
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+
+    if (fullName.isEmpty || email.isEmpty || password.isEmpty) {
+      _showMessage('Vui long nhap day du ho ten, email va mat khau.');
+      return;
+    }
+
+    final isSuccess = await controller.registerWithEmail(
+      fullName: fullName,
+      email: email,
+      password: password,
+    );
+
+    if (!mounted) return;
+
+    if (isSuccess) {
+      Navigator.pushNamedAndRemoveUntil(context, '/profile', (_) => false);
+    } else {
+      _showMessage(controller.errorMessage ?? 'Dang ky that bai.');
+    }
+  }
+
+  Future<void> _loginWithGoogle(AuthController controller) async {
+    final isSuccess = await controller.loginWithGoogle();
+
+    if (!mounted) return;
+
+    if (isSuccess) {
+      Navigator.pushNamedAndRemoveUntil(context, '/profile', (_) => false);
+    } else {
+      _showMessage(controller.errorMessage ?? 'Dang nhap Google that bai.');
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final authController = context.watch<AuthController>();
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -57,16 +114,19 @@ class _LoginScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 62),
 
-                const AuthTextField(
+                AuthTextField(
                   label: 'Full name',
                   hintText: 'Brandone Louis',
-                  keyboardType: TextInputType.emailAddress,
+                  controller: fullNameController,
+                  textInputAction: TextInputAction.next,
                 ),
 
-                const AuthTextField(
+                AuthTextField(
                   label: 'Email',
                   hintText: 'Email',
                   keyboardType: TextInputType.emailAddress,
+                  controller: emailController,
+                  textInputAction: TextInputAction.next,
                 ),
 
                 const SizedBox(height: 22),
@@ -76,6 +136,8 @@ class _LoginScreenState extends State<SignupScreen> {
                   hintText: 'Password',
                   obscureText: isPasswordHidden,
                   letterSpacing: 3,
+                  controller: passwordController,
+                  textInputAction: TextInputAction.done,
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -109,18 +171,22 @@ class _LoginScreenState extends State<SignupScreen> {
                 const SizedBox(height: 38),
 
                 PrimaryButton(
-                  text: 'LOGIN',
-                  onPressed: () {
-                    // TODO: xử lý đăng nhập
-                  },
+                  text: 'REGISTER',
+                  isLoading: authController.isLoading,
+                  onPressed: authController.isLoading
+                      ? null
+                      : () =>
+                          _registerWithEmail(context.read<AuthController>()),
                 ),
 
                 const SizedBox(height: 22),
 
                 GoogleLoginButton(
-                  onPressed: () {
-                    // TODO: xử lý đăng nhập Google
-                  },
+                  text: 'SIGN UP WITH GOOGLE',
+                  isLoading: authController.isLoading,
+                  onPressed: authController.isLoading
+                      ? null
+                      : () => _loginWithGoogle(context.read<AuthController>()),
                 ),
 
                 const SizedBox(height: 24),
@@ -129,7 +195,7 @@ class _LoginScreenState extends State<SignupScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "You don't have an account yet? ",
+                      'Already have an account? ',
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,

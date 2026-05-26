@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../app/app_colors.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/core/constants/app_colors.dart';
 
 class AuthTextField extends StatelessWidget {
   final String label;
@@ -8,6 +8,8 @@ class AuthTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final Widget? suffixIcon;
   final double letterSpacing;
+  final TextEditingController? controller;
+  final TextInputAction? textInputAction;
 
   const AuthTextField({
     super.key,
@@ -17,6 +19,8 @@ class AuthTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.suffixIcon,
     this.letterSpacing = 0,
+    this.controller,
+    this.textInputAction,
   });
 
   @override
@@ -36,8 +40,10 @@ class AuthTextField extends StatelessWidget {
         const SizedBox(height: 10),
 
         TextField(
+          controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
+          textInputAction: textInputAction,
           style: TextStyle(
             fontSize: 13,
             color: AppColors.textPrimary,

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../app/app_colors.dart';
-import '../../widgets/auth_text_field.dart';
-import '../../widgets/primary_button.dart';
-import '../../widgets/secondary_button.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/core/constants/app_colors.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/features/widgets/primary_button.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/features/widgets/secondary_button.dart';
 
 class SuccesfulScreen extends StatelessWidget {
   const SuccesfulScreen({super.key});

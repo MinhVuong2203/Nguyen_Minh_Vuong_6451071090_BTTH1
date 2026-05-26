@@ -1,16 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/controller/auth_controller.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/core/constants/app_colors.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/features/widgets/auth_text_field.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/features/widgets/primary_button.dart';
+import 'package:nguyen_minh_vuong_6451071090_btth1/features/widgets/secondary_button.dart';
+import 'package:provider/provider.dart';
 
-import '../../app/app_colors.dart';
-import '../../widgets/auth_text_field.dart';
-import '../../widgets/primary_button.dart';
-import '../../widgets/secondary_button.dart';
-
-class ForgotPasswordScreen extends StatelessWidget {
+class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _resetPassword(AuthController controller) async {
+    final email = emailController.text.trim();
+
+    if (email.isEmpty) {
+      _showMessage('Vui long nhap email.');
+      return;
+    }
+
+    final isSuccess = await controller.resetPassword(email);
+
+    if (!mounted) return;
+
+    if (isSuccess) {
+      Navigator.pushNamed(context, '/check-email');
+    } else {
+      _showMessage(controller.errorMessage ?? 'Gui email that bai.');
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final authController = context.watch<AuthController>();
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -60,19 +101,22 @@ class ForgotPasswordScreen extends StatelessWidget {
 
                 const SizedBox(height: 62),
 
-                const AuthTextField(
+                AuthTextField(
                   label: 'Email',
                   hintText: 'Brandonelouis@gmail.com',
                   keyboardType: TextInputType.emailAddress,
+                  controller: emailController,
+                  textInputAction: TextInputAction.done,
                 ),
 
                 const SizedBox(height: 28),
 
                 PrimaryButton(
                   text: 'RESET PASSWORD',
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/check-email');
-                  },
+                  isLoading: authController.isLoading,
+                  onPressed: authController.isLoading
+                      ? null
+                      : () => _resetPassword(context.read<AuthController>()),
                 ),
 
                 const SizedBox(height: 22),
