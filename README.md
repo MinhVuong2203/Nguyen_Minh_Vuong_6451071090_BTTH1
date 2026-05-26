@@ -1,19 +1,33 @@
 # nguyen_minh_vuong_6451071090_btth1
 
-## Đăng nhập bằng gmail
+## Đăng nhập bằng Gmail
 
-![alt text](image-1.png)
+Màn hình đăng nhập bằng email và mật khẩu.
 
-![alt text](image-2.png)
+![Màn hình đăng nhập bằng email](image-1.png)
 
-![alt text](image-3.png)
+Nhập thông tin tài khoản Gmail đã đăng ký.
 
-![alt text](image-4.png)
+![Nhập email và mật khẩu](image-2.png)
 
-## Đăng nhập bằng google
+Thông báo hoặc trạng thái sau khi xác thực tài khoản.
 
-![alt text](image-5.png)
+![Kết quả đăng nhập bằng email](image-3.png)
 
-![alt text](image-6.png)
+Màn hình thông tin người dùng sau khi đăng nhập thành công.
 
-![alt text](image-7.png)
+![Thông tin tài khoản](image-4.png)
+
+## Đăng nhập bằng Google
+
+Người dùng nhấn nút đăng nhập với Google.
+
+![Nút đăng nhập Google](image-5.png)
+
+Danh sách tài khoản Google để người dùng chọn.
+
+![Chọn tài khoản Google](image-6.png)
+
+Màn hình thông tin sau khi đăng nhập Google thành công.
+
+![Thông tin tài khoản Google](image-7.png)
